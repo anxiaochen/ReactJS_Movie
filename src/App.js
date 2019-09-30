@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import routes from './router/index';
+import 'antd/dist/antd.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import TopHeader from './components/TopHeader'
+
+class App extends Component {
+
+  componentDidMount() {
+    // console.log(this)
+  }
+
+  render() {
+    return (
+      <div>
+        <Router>
+          <TopHeader {...routes}></TopHeader>
+          <div>
+            <Switch>
+              {
+                routes.map((item, i) => {
+                  if (item.exact) {
+
+                    return <Route exact path={item.path} key={i}
+                      render={ props => (<item.component {...props} routes={item.subs} />)} />
+                  } else {
+                    return <Route path={item.path} key={i}
+                      render={ props => (<item.component {...props}  routes={item.subs}/>)} />
+                  }
+                })
+              }
+            </Switch>
+          </div>
+          </Router>
+      </div>
+    );
+  }
+
 }
 
 export default App;
